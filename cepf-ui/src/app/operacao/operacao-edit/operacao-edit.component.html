@@ -1,0 +1,215 @@
+<section>
+  <div class="section-body">
+    <form class="form" name="formulario" #form="ngForm" accept-charset="utf-8" (ngSubmit)="persist()">
+
+      <af-edit-fields [title]="'Operação'" [baseRoute]="'/operacoes'" [component]="this">
+        <div fields>
+          <card [label]="'Dados Gerais'">
+            <div body>
+
+              <div class="row">
+                <!--                <form-group [columnClass]="'col-sm-2'" [label]="'Data'" [input]="data" [date]="true">-->
+                <!--                  <input class="form-control" type="text" name="data"-->
+                <!--                         [ngModel]="instance.data | date: 'dd/MM/yyyy'" (ngModelChange)="instance.data=$event"-->
+                <!--                         #data="ngModel" date required>-->
+                <!--                </form-group>-->
+                <form-group [columnClass]="'col-sm-2'" [label]="'Número'">
+                  <input class="form-control" type="text" name="numero" [disabled]="true"
+                         [(ngModel)]="instance.numero" input>
+                </form-group>
+
+                <form-group [columnClass]="'col-sm-2'" [label]="'Data'" [datepicker]="pickerData">
+                  <ng-container date>
+                    <input class="form-control" type="text" name="data" [(ngModel)]="instance.data"
+                           [matDatepicker]="pickerData" (focus)="pickerData.open()" required>
+                    <mat-datepicker-toggle style="display: none;" matSuffix [for]="pickerData"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerData></mat-datepicker>
+                  </ng-container>
+                </form-group>
+
+                <form-group [columnClass]="'col-sm-2'" [label]="'Data Autorização'">
+                  <input class="form-control" type="text" name="dataDeAutorizacao" [disabled]="true"
+                         [ngModel]="instance.dataDeAutorizacao | date: 'dd/MM/yyyy'" input>
+                </form-group>
+
+                <form-group [columnClass]="'col-sm-2'" [label]="'Data Quitação'">
+                  <input class="form-control" type="text" name="dataQuitacao" [disabled]="true"
+                         [ngModel]="instance.dataQuitacao | date: 'dd/MM/yyyy'" input>
+                </form-group>
+
+                <form-group [columnClass]="'col-sm-2'" [label]="'Data Finalização'">
+                  <input class="form-control" type="text" name="dataFinalizacao" [disabled]="true"
+                         [ngModel]="instance.dataFinalizacao | date: 'dd/MM/yyyy'" input>
+                </form-group>
+
+                <form-group [columnClass]="'col-sm-2'" [label]="'Data Cancelamento'">
+                  <input class="form-control" type="text" name="dataDeCancelamento" [disabled]="true"
+                         [ngModel]="instance.dataDeCancelamento | date: 'dd/MM/yyyy'" input>
+                </form-group>
+
+              </div>
+
+              <div class="row">
+                <af-autocomplete [id]="'autocompleteCliente'" [columnClass]="'col-sm-6'" [label]="'Cliente'" [fieldToDisplay]="'pessoa.nome'"
+                                 [observableDataSource]="observableClientes" [displayWith]="displayAutocompleteCliente"
+                                 (onSelect)="instance.cliente = $event" [change]="changeEventCliente.asObservable()">
+                </af-autocomplete>
+
+                <form-group [columnClass]="'col-sm-2'" [label]="'Valor'" [input]="valor">
+                  <input id="valor" class="form-control" type="text" name="valor" [(ngModel)]="instance.valor" currencyMask
+                         [options]="{prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left'}" #valor="ngModel" input required>
+                </form-group>
+
+                <form-group [columnClass]="'col-sm-2'" [label]="'Taxa(%)'" [input]="taxa">
+                  <input class="form-control" type="text" name="taxa" [(ngModel)]="instance.taxa"
+                         #taxa="ngModel" input required>
+                </form-group>
+
+                <form-group [columnClass]="'col-sm-2'" [label]="'Tp. Pagamento'" [input]="tipoDePagamento">
+                  <select class="form-control" name="tipoDePagamento" (ngModelChange)="onChangeTipoDePagamento($event)"
+                          [(ngModel)]="instance.tipoDePagamento" #tipoDePagamento="ngModel" input required>
+                    <option value=""></option>
+                    <option *ngFor="let tipoDePagamento of enumService.tipoDePagamento"
+                            [value]="tipoDePagamento.toString()">{{tipoDePagamento}}</option>
+                  </select>
+                </form-group>
+              </div>
+
+              <div class="row">
+
+                <form-group [columnClass]="'col-sm-2'" [label]="'Parcelas'" [input]="quantidadeDeParcelas">
+                  <input class="form-control" type="text" name="quantidadeDeParcelas" [(ngModel)]="instance.quantidadeDeParcelas"
+                         #quantidadeDeParcelas="ngModel" input required [readOnly]="isSomenteJuros()">
+                </form-group>
+
+                <form-group [columnClass]="'col-sm-2'" [label]="'Tipo de Operação'" [input]="tipoOperacao">
+                  <select class="form-control" name="tipoOperacao" (ngModelChange)="onChangeTipoDeOperacao($event)"
+                          [(ngModel)]="instance.tipoDeOperacao" #tipoOperacao="ngModel" input required>
+                    <option value=""></option>
+                    <option *ngFor="let tipoOperacao of enumService.tipoDeOperacao"
+                            [value]="tipoOperacao.toString()">{{tipoOperacao}}</option>
+                  </select>
+                </form-group>
+
+                <form-group [columnClass]="'col-sm-6'" [label]="'Investidor Sênior'" [input]="investidorSenior">
+                  <select class="form-control" name="investidorSenior" [(ngModel)]="instance.investidorSenior"
+                          #investidorSenior="ngModel" input [compareWith]="compareWith" [required]="!operacaoPropria">
+                    <option value=""></option>
+                    <option *ngFor="let investidor of investidores | async"
+                            [ngValue]="investidor">{{investidor.pessoa.nome}}</option>
+                  </select>
+                </form-group>
+
+                <form-group [columnClass]="'col-sm-2'" [label]="'Taxa Repasse(%)'" [input]="taxaDeRepasse">
+                  <input class="form-control" type="text" name="taxaDeRepasse" [(ngModel)]="instance.taxaDeRepasse"
+                         #taxaDeRepasse="ngModel" input [required]="!operacaoPropria">
+                </form-group>
+              </div>
+            </div>
+
+            <div actionbar>
+              <button type="button" (click)="gerarParcelas()"
+                      class="btn ink-reaction btn-raised btn-success" accesskey="A">
+                Gerar Parcelas
+              </button>
+            </div>
+          </card>
+
+          <card [label]="'Parcelas'">
+            <div body>
+
+              <af-data-table [id]="'tableParcelas'" [padding]="false">
+
+                <thead class="style-default-dark" header>
+                  <tr>
+                    <th class="text-left">Número</th>
+                    <th class="text-left">Vencimento</th>
+                    <th class="text-left">Prorrogação</th>
+                    <th class="text-left">Pagamento</th>
+                    <th class="text-right">Valor</th>
+                    <th class="text-right">Valor Pago</th>
+                  </tr>
+                </thead>
+
+                <tbody body>
+                  <tr *ngFor="let parcela of instance.parcelas"
+                      [class.warning]="parcela.dataDoPagamento == null && parcela.vencendo"
+                      [class.danger]="parcela.dataDoPagamento == null && parcela.vencida"
+                      [class.success]="parcela.dataDoPagamento != null">
+                    <td>{{parcela.numero}}</td>
+                    <td>{{parcela.dataDeVencimento | date: 'dd/MM/yyyy'}}</td>
+                    <td>{{parcela.dataDeProrrogacao | date: 'dd/MM/yyyy'}}</td>
+                    <td>{{parcela.dataDoPagamento | date: 'dd/MM/yyyy'}}</td>
+                    <td class="text-right">{{parcela.valor | currency: 'BRL'}}</td>
+                    <td class="text-right">{{parcela.valorPago | currency: 'BRL'}}</td>
+                  </tr>
+                </tbody>
+
+                <tfoot footer class="style-default-light" *ngIf="instance.parcelas">
+                  <tr>
+                    <td class="text-right" colspan="4">Total:</td>
+                    <td class="text-right">{{valorTotalDasParcelas | currency: 'BRL'}}</td>
+                    <td class="text-right">{{valorTotalPagoDasParcelas | currency: 'BRL'}}</td>
+                  </tr>
+                </tfoot>
+              </af-data-table>
+
+            </div>
+          </card>
+
+          <card [label]="'Repasses'" *ngIf="instance.repasse">
+            <div body>
+
+              <af-data-table [id]="'tableRepasses'" [padding]="false">
+
+                <thead class="style-default-dark" header>
+                <tr>
+                  <th class="text-left">Número</th>
+                  <th class="text-left">Vencimento</th>
+                  <th class="text-left">Prorrogação</th>
+                  <th class="text-left">Pagamento</th>
+                  <th class="text-right">Ágio</th>
+                  <th class="text-right">Valor</th>
+                </tr>
+                </thead>
+
+                <tbody body>
+                <tr *ngFor="let repasse of instance.repassesMensais"
+                    [class.warning]="repasse.dataDoPagamento == null && repasse.vencendo"
+                    [class.danger]="repasse.dataDoPagamento == null && repasse.vencido"
+                    [class.success]="repasse.dataDoPagamento != null">
+                  <td>{{repasse.numero}}</td>
+                  <td>{{repasse.dataDeVencimento | date: 'dd/MM/yyyy'}}</td>
+                  <td>{{repasse.dataDeProrrogacao | date: 'dd/MM/yyyy'}}</td>
+                  <td>{{repasse.dataDoPagamento | date: 'dd/MM/yyyy'}}</td>
+                  <td class="text-right">{{repasse.agio | currency: 'BRL'}}</td>
+                  <td class="text-right">{{repasse.valor | currency: 'BRL'}}</td>
+                </tr>
+                </tbody>
+
+                <tfoot footer class="style-default-light" *ngIf="instance.repassesMensais">
+                <tr>
+                  <td class="text-right" colspan="4">Total:</td>
+                  <td class="text-right">{{valorTotalAgio | currency: 'BRL'}}</td>
+                  <td class="text-right">{{valorTotalDosRepasses | currency: 'BRL'}}</td>
+                </tr>
+                </tfoot>
+              </af-data-table>
+
+            </div>
+          </card>
+
+          <card [label]="'Histórico'">
+            <div body>
+              <form-group [columnClass]="'col-sm-12'" [label]="'Histórico'">
+                          <textarea class="form-control" type="text" name="historico" rows="5"
+                                    [(ngModel)]="instance.historico" input></textarea>
+              </form-group>
+            </div>
+          </card>
+        </div>
+      </af-edit-fields>
+
+    </form>
+  </div>
+</section>

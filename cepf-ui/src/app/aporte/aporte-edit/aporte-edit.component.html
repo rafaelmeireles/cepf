@@ -1,0 +1,47 @@
+<section>
+  <div class="section-body">
+    <form class="form" name="formulario" #form="ngForm" accept-charset="utf-8" (ngSubmit)="persist()">
+
+      <af-edit-fields [title]="'Cadastro de Aporte'" [fullTitle]="true" [baseRoute]="'/'" [component]="this">
+        <div fields>
+          <card [label]="'Dados Gerais'">
+            <div body>
+              <div class="row">
+                <form-group [columnClass]="'col-sm-6'" [label]="'Contas Corrente'" [input]="contaCorrente">
+                  <select class="form-control" name="contaCorrente" [(ngModel)]="instance.contaCorrente"
+                          #contaCorrente="ngModel" input required [compareWith]="compareWith">
+                    <option value=""></option>
+                    <option *ngFor="let contaCorrente of contas | async"
+                            [ngValue]="contaCorrente">{{contaCorrente.descricao}}</option>
+                  </select>
+                </form-group>
+
+                <form-group [columnClass]="'col-sm-6'" [label]="'Valor'" [input]="valor">
+                  <input class="form-control" type="text" name="valor" [(ngModel)]="instance.valor" currencyMask
+                         [options]="{prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left'}" #valor="ngModel" input required>
+                </form-group>
+              </div>
+              <div class="row">
+                <form-group [columnClass]="'col-sm-6'" [labelColumnClass]="'col-sm-4'"
+                            [label]="'Aporte de Repasse'" [checkboxInLine]='true'>
+                  <ng-container checkbox-inline>
+                    <label class="checkbox-inline checkbox-styled">
+                      <input type="checkbox" [value]="aporteDeRepasse" name="aporteDeRepasse"
+                             [(ngModel)]="aporteDeRepasse" (change)="aporteDeRepasse=$event.target.checked">
+                    </label>
+                  </ng-container>
+                </form-group>
+
+                <af-autocomplete [columnClass]="'col-sm-6'" [label]="'Investidor Sênior'" [fieldToDisplay]="'pessoa.nome'"
+                                 [observableDataSource]="observableInvestidores" [displayWith]="displayAutocompleteInvestidor"
+                                 (onSelect)="instance.investidorSenior = $event" [readonly]="!aporteDeRepasse">
+                </af-autocomplete>
+              </div>
+            </div>
+          </card>
+        </div>
+      </af-edit-fields>
+
+    </form>
+  </div>
+</section>

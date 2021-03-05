@@ -1,0 +1,62 @@
+<section>
+  <div class="section-body">
+    <form class="form" name="formulario" #form="ngForm" accept-charset="utf-8">
+
+      <af-list-fields [title]="'Cliente'" [component]="this">
+        <div fields>
+          <div class="row">
+            <form-group [columnClass]="'col-sm-6'" [label]="'Nome'">
+              <input class="form-control" type="text" name="nome" [(ngModel)]="instance.taxa" input>
+            </form-group>
+          </div>
+        </div>
+      </af-list-fields>
+
+      <af-data-table>
+        <thead class="style-default-dark" header>
+        <tr>
+          <th class="text-left">CPF</th>
+          <th class="text-left">Nome</th>
+          <th class="text-left">Telefone</th>
+          <th class="text-left">Endereco</th>
+          <th class="text-left">Taxa</th>
+          <th class="text-left">Referência</th>
+          <th class="text-right">Saldo</th>
+          <th class="text-left" style="width: 5%;"></th>
+          <th class="text-left" style="width: 5%;"></th>
+        </tr>
+        </thead>
+        '
+        <tbody body>
+          <tr *ngFor="let entity of resultList">
+            <td>{{entity.pessoa.cpf | mask: '000.000.000-00'}}</td>
+            <td>{{entity.pessoa.nome}}</td>
+            <td>{{entity.pessoa.telefonePrincipal | mask: '(99) - 9.9999-9999'}}</td>
+            <td>
+              {{entity.pessoa.endereco?.tipoLogradouro}} {{entity.pessoa.endereco?.logradouro}},
+              {{entity.pessoa.endereco?.numero}}, {{entity.pessoa.endereco?.complemento}},
+              {{entity.pessoa.endereco?.bairro}}, {{entity.pessoa.endereco?.cep | mask: '99999-999'}}
+            </td>
+            <td>{{entity.taxa != null ? entity.taxa + '%' : ''}}</td>
+  <!--          <td>{{entity.taxa | percent: '0.2-2'}}</td>-->
+            <td>{{entity.referencia?.nome}} - {{entity.referencia?.telefone | mask: '(99) - 9.9999-9999'}}</td>
+            <td class="text-right" [ngClass]="entity.conta.saldo < 0 ? 'text-danger' : ''">
+              {{entity.conta.saldo | currency: 'BRL'}}</td>
+            <td>
+              <button class="btn btn-icon-toggle" type="button" (click)="prepareView(entity.id)"
+                      data-toggle="tooltip" data-placement="top" title="Visualizar">
+                <i class="fa fa-search"></i>
+              </button>
+            </td>
+            <td>
+              <button class="btn btn-icon-toggle" type="button" (click)="prepareUpdate(entity.id)"
+                      data-toggle="tooltip" data-placement="top" title="Editar">
+                <i class="fa fa-edit"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </af-data-table>
+    </form>
+  </div>
+</section>

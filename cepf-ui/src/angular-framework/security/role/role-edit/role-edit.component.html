@@ -1,0 +1,31 @@
+<section>
+  <div class="section-body">
+    <form class="form" name="formulario" #form="ngForm" accept-charset="utf-8" (ngSubmit)="persist()">
+
+      <af-edit-fields [title]="'Papel'" [baseRoute]="'/roles'" [component]="this">
+        <div fields>
+          <card [label]="'Dados Gerais'">
+            <div body>
+              <div class="row">
+                <form-group [columnClass]="'col-sm-4'" [label]="'Código'" [input]="code">
+                  <input class="form-control" type="text" name="code" [(ngModel)]="instance.code"
+                         #code="ngModel" input required>
+                </form-group>
+
+                <form-group [columnClass]="'col-sm-6'" [label]="'Nome'" [input]="name">
+                  <input class="form-control" type="text" name="name" [(ngModel)]="instance.name"
+                         #name="ngModel" input required>
+                </form-group>
+
+                <form-group [columnClass]="'col-sm-2'" [label]="'Ativo'" [checkbox]='true'>
+                  <input type="checkbox" name="active" [(ngModel)]="instance.active" checkbox>
+                </form-group>
+              </div>
+            </div>
+          </card>
+        </div>
+      </af-edit-fields>
+
+    </form>
+  </div>
+</section>

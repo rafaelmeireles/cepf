@@ -1,0 +1,52 @@
+<!-- BEGIN LOGIN SECTION -->
+<section class="section-account">
+	<div class="img-backdrop" style="background-image: url('../../assets/img/img16.jpg')"></div>
+	<div class="spacer"></div>
+  <!--<div id="login" class="card card-underline card-outlined style-primary">-->
+	<div id="login" class="card contain-sm style-transparent">
+		<div class="card-body">
+			<div class="row">
+				<div class="col-sm-6">
+					<br/>
+					<span class="text-lg text-bold text-primary">ARRUMAR TELA...</span>
+					<br/><br/>
+					<form class="form floating-label" #form="ngForm" (ngSubmit)="login()" novalidate accept-charset="utf-8">
+            <div class="row">
+              <form-group [columnClass]="'col-sm-12'" [label]="'Login'" [input]="username">
+                <input class="form-control" name="username" type="text" [(ngModel)]="instance.username" ngModel
+                       #username="ngModel" input required>
+              </form-group>
+            </div>
+            <div class="row">
+              <form-group [columnClass]="'col-sm-12'" [label]="'Senha'" [input]="password">
+                <input class="form-control" name="password" type="password" [(ngModel)]="instance.password" ngModel
+                       #password="ngModel" input required>
+              </form-group>
+            </div>
+						<br/>
+						<div class="row">
+							<div class="col-xs-6 text-left">
+								<div class="checkbox checkbox-inline checkbox-styled">
+									<label>
+										<input type="checkbox"> <span>Lembrar-me</span>
+									</label>
+								</div>
+							</div><!--end .col -->
+							<div class="col-xs-6 text-right">
+								<button type="submit" class="btn ink-reaction btn-raised btn-primary">Entrar</button>
+							</div><!--end .col -->
+						</div><!--end .row --> 
+						<br/>
+						<div class="footer text-center">
+							<img alt="Logo Aptare" src="../../assets/framework-aptare/img/footer.png">
+						</div>
+					</form>
+				</div><!--end .col -->
+				<div class="col-sm-5 col-sm-offset-1 text-center">
+					
+						</div><!--end .col -->
+					</div><!--end .row -->
+				</div><!--end .card-body -->
+			</div><!--end .card -->
+		</section>
+		<!-- END LOGIN SECTION -->

@@ -1,0 +1,56 @@
+<af-list-fields [title]="'Operação'" [component]="this" [insert]="insert">
+  <div fields>
+    <div class="row">
+      <af-autocomplete [columnClass]="'col-sm-6'" [label]="'Cliente'" [fieldToDisplay]="'pessoa.nome'"
+                       [observableDataSource]="observableClientes" [displayWith]="displayAutocompleteCliente"
+                       (onSelect)="instance.cliente = $event">
+      </af-autocomplete>
+
+      <form-group [columnClass]="'col-sm-3'" [label]="'Data Inicial'" [datepicker]="pickerDataInicial">
+        <ng-container date>
+          <input class="form-control" type="text" name="dataInicial" [(ngModel)]="dataInicial"
+                 [matDatepicker]="pickerDataInicial" (focus)="pickerDataInicial.open()">
+          <mat-datepicker-toggle style="display: none;" matSuffix [for]="pickerDataInicial"></mat-datepicker-toggle>
+          <mat-datepicker #pickerDataInicial></mat-datepicker>
+        </ng-container>
+      </form-group>
+
+      <form-group [columnClass]="'col-sm-3'" [label]="'Data Final'" [datepicker]="pickerDataFinal">
+        <ng-container date>
+          <input class="form-control" type="text" name="dataFinal" [(ngModel)]="dataFinal"
+                 [matDatepicker]="pickerDataFinal" (focus)="pickerDataFinal.open()">
+          <mat-datepicker-toggle style="display: none;" matSuffix [for]="pickerDataFinal"></mat-datepicker-toggle>
+          <mat-datepicker #pickerDataFinal></mat-datepicker>
+        </ng-container>
+      </form-group>
+    </div>
+
+    <div class="row">
+      <af-autocomplete [columnClass]="'col-sm-6'" [label]="'Investidor Sênior'" [fieldToDisplay]="'pessoa.nome'"
+                       [observableDataSource]="observableInvestidores" [displayWith]="displayAutocompleteInvestidor"
+                       (onSelect)="instance.investidorSenior = $event">
+      </af-autocomplete>
+    </div>
+
+    <div class="row">
+      <form-group [columnClass]="'col-sm-6'" [labelColumnClass]="'col-sm-4'" [label]="'Tipo de Operação'" [checkboxInLine]='true'>
+        <ng-container checkbox-inline *ngFor="let tipoOperacao of enumService.tipoDeOperacao">
+          <label class="checkbox-inline checkbox-styled">
+            <input type="checkbox" [value]="tipoOperacao" (change)="onChangeTipoDeOperacao($event, tipoOperacao)">
+            <span>{{tipoOperacao}}</span>
+          </label>
+        </ng-container>
+      </form-group>
+
+      <form-group [columnClass]="'col-sm-6'" [labelColumnClass]="'col-sm-4'" [label]="'Tipo de Pagamento'" [checkboxInLine]='true'>
+        <ng-container checkbox-inline *ngFor="let tipoPagamento of enumService.tipoDePagamento">
+          <label class="checkbox-inline checkbox-styled">
+            <input type="checkbox" [value]="tipoPagamento" (change)="onChangeTipoDePagamento($event, tipoPagamento)">
+            <span>{{tipoPagamento}}</span>
+          </label>
+        </ng-container>
+      </form-group>
+    </div>
+  </div>
+</af-list-fields>
+

@@ -1,0 +1,392 @@
+<section>
+  <div class="section-body">
+    <form class="form" name="formulario" #form="ngForm" accept-charset="utf-8">
+<!--      <a href="#" data-target="#offcanvas-view" data-toggle="offcanvas">C</a><br/>-->
+
+<!--      <ng-sidebar-container style="position:absolute">-->
+<!--        <ng-sidebar [(opened)]="_opened" #sidebar [position]="'right'" (onOpenStart)="open(operacaoEdit)" (onCloseStart)="close(operacaoEdit)"-->
+<!--                    [closeOnClickOutside]="true" [sidebarClass]="'style-default-light'">-->
+<!--          <app-operacao-edit #operacaoEdit></app-operacao-edit>-->
+<!--        </ng-sidebar>-->
+<!--      </ng-sidebar-container>-->
+
+      <af-list-fields [title]="'Operação'" [component]="this" >
+        <div fields>
+          <div class="row">
+            <af-autocomplete [columnClass]="'col-sm-6'" [label]="'Cliente'" [fieldToDisplay]="'pessoa.nome'"
+                             [observableDataSource]="observableClientes" [displayWith]="displayAutocompleteCliente"
+                             (onSelect)="instance.cliente = $event">
+            </af-autocomplete>
+
+            <form-group [columnClass]="'col-sm-3'" [label]="'Data Inicial'" [datepicker]="pickerDataInicial">
+              <ng-container date>
+                <input class="form-control" type="text" name="dataInicial" [(ngModel)]="dataInicial"
+                       [matDatepicker]="pickerDataInicial" (focus)="pickerDataInicial.open()">
+                <mat-datepicker-toggle style="display: none;" matSuffix [for]="pickerDataInicial"></mat-datepicker-toggle>
+                <mat-datepicker #pickerDataInicial></mat-datepicker>
+              </ng-container>
+            </form-group>
+
+            <form-group [columnClass]="'col-sm-3'" [label]="'Data Final'" [datepicker]="pickerDataFinal">
+              <ng-container date>
+                <input class="form-control" type="text" name="dataFinal" [(ngModel)]="dataFinal"
+                       [matDatepicker]="pickerDataFinal" (focus)="pickerDataFinal.open()">
+                <mat-datepicker-toggle style="display: none;" matSuffix [for]="pickerDataFinal"></mat-datepicker-toggle>
+                <mat-datepicker #pickerDataFinal></mat-datepicker>
+              </ng-container>
+            </form-group>
+          </div>
+
+          <div class="row">
+            <af-autocomplete [columnClass]="'col-sm-6'" [label]="'Investidor Sênior'" [fieldToDisplay]="'pessoa.nome'"
+                             [observableDataSource]="observableInvestidores" [displayWith]="displayAutocompleteInvestidor"
+                             (onSelect)="instance.investidorSenior = $event">
+            </af-autocomplete>
+          </div>
+
+          <div class="row">
+            <form-group [columnClass]="'col-sm-6'" [labelColumnClass]="'col-sm-4'" [label]="'Tipo de Operação'" [checkboxInLine]='true'>
+              <ng-container checkbox-inline *ngFor="let tipoOperacao of enumService.tipoDeOperacao">
+                <label class="checkbox-inline checkbox-styled">
+                  <input type="checkbox" [value]="tipoOperacao" (change)="onChangeTipoDeOperacao($event, tipoOperacao)">
+                  <span>{{tipoOperacao}}</span>
+                </label>
+              </ng-container>
+            </form-group>
+
+            <form-group [columnClass]="'col-sm-6'" [labelColumnClass]="'col-sm-4'" [label]="'Tipo de Pagamento'" [checkboxInLine]='true'>
+              <ng-container checkbox-inline *ngFor="let tipoPagamento of enumService.tipoDePagamento">
+                <label class="checkbox-inline checkbox-styled">
+                  <input type="checkbox" [value]="tipoPagamento" (change)="onChangeTipoDePagamento($event, tipoPagamento)">
+                  <span>{{tipoPagamento}}</span>
+                </label>
+              </ng-container>
+            </form-group>
+          </div>
+        </div>
+      </af-list-fields>
+
+      <af-data-table [dataSource]="resultList">
+        <thead class="style-default-dark" header>
+        <tr>
+<!--          <th class="text-left">Cód.</th>-->
+          <th class="text-left">Num.</th>
+          <th class="text-left">Data</th>
+<!--          <th class="text-left">Dt. Autoriz.</th>-->
+<!--          <th class="text-left">Dt. Quit.</th>-->
+<!--          <th class="text-left">Dt. Fnl.</th>-->
+<!--          <th class="text-left">Dt. Canc.</th>-->
+          <th class="text-left">Cliente</th>
+          <th class="text-left" *ngIf="'ADMINISTRADOR' | pipeFunction : hasRole : this">Investidor</th>
+          <th class="text-left">Inv. Sênior</th>
+          <th class="text-left">Valor</th>
+          <th class="text-left">Taxa</th>
+          <th class="text-left">Qtd Parc.</th>
+          <th class="text-left">Tp. Pag.</th>
+          <th class="text-left">Tp. Oper.</th>
+          <th class="text-left"></th><!-- Visualizar -->
+          <th class="text-left"></th><!-- Histórico -->
+          <th class="text-left"></th><!-- Autorizar -->
+          <th class="text-left"></th><!-- Repasse Mensal -->
+          <th class="text-left"></th><!-- Pagar Somente Juros -->
+          <th class="text-left"></th><!-- Finalizar -->
+          <th class="text-left"></th><!-- Cancelar -->
+        </tr>
+        </thead>
+
+        <tbody body>
+        <tr *ngFor="let entity of resultList"
+            [class.warning]="entity.temRepasseMensal">
+<!--          <td>{{entity.id}}</td>-->
+          <td>{{entity.numero}}</td>
+          <td>{{entity.data}}</td>
+<!--          <td>{{entity.dataDeAutorizacao | date: 'dd/MM/yyyy'}}</td>-->
+<!--          <td>{{entity.dataQuitacao | date: 'dd/MM/yyyy'}}</td>-->
+<!--          <td>{{entity.dataFinalizacao | date: 'dd/MM/yyyy'}}</td>-->
+<!--          <td>{{entity.dataDeCancelamento | date: 'dd/MM/yyyy'}}</td>-->
+          <td>{{entity.cliente.pessoa.nome}}</td>
+          <td *ngIf="'ADMINISTRADOR' | pipeFunction : hasRole: this">{{entity.investidor.pessoa.nome}}</td>
+          <td>{{entity.investidorSenior?.pessoa.nome}}</td>
+          <td>{{entity.valor | currency: 'BRL'}}</td>
+          <td>{{entity.taxa}}%</td>
+          <td>{{entity.quantidadeDeParcelas}}</td>
+          <td>{{entity.tipoDePagamento}}</td>
+          <td>{{entity.tipoDeOperacao}} {{entity.repasse ? ' - ' + entity.taxaDeRepasse + '%' : ''}}</td>
+          <td>
+            <button class="btn btn-icon-toggle" type="button" (click)="prepareView(entity.id)"
+                    data-toggle="tooltip" data-placement="top" title="Visualizar">
+              <i class="fa fa-search"></i>
+            </button>
+          </td>
+          <td>
+            <button class="btn btn-icon-toggle" type="button" [attr.data-target]="'#dialogHistorico' + entity.id"
+                    data-toggle="modal" data-placement="top" title="Atualizar Histórico">
+              <i class="md md-comment"></i>
+            </button>
+            <af-dialog [id]="'dialogHistorico' + entity.id" (onClose)="atualizarHistorico(entity)" [confirmDialog]="false"
+                       [title]="'Atualização de Histórico'" [labelOperationButton]="'Atualizar'">
+              <ng-container modal-body>
+                <form class="form" name="formHistorico" accept-charset="utf-8">
+                  <div class="row">
+                    <form-group [columnClass]="'col-sm-12'" [label]="'Histórico'">
+                        <textarea class="form-control" type="text" name="historico" rows="5"
+                                  [(ngModel)]="entity.historico" input></textarea>
+                    </form-group>
+                  </div>
+                </form>
+              </ng-container>
+            </af-dialog>
+          </td>
+          <td>
+            <ng-container *ngIf="entity.dataDeAutorizacao == null">
+              <button class="btn btn-icon-toggle" type="button" [attr.data-target]="'#dialogAutorizar' + entity.id"
+                      data-toggle="modal" data-placement="top" title="Autorizar">
+                <i class="fa fa-money"></i>
+              </button>
+              <af-dialog [id]="'dialogAutorizar' + entity.id" (onClose)="autorizar(entity, $event, formAutorizar)" [confirmDialog]="false"
+                         [title]="'Autorização de Operação'" [labelOperationButton]="'Autorizar'" [large]="true">
+                <ng-container modal-body>
+                  <form class="form" name="formAutorizar" #formAutorizar="ngForm" accept-charset="utf-8">
+                    <div class="row">
+                      <form-group [columnClass]="'col-sm-10'" [label]="'Conta de Débito'" [input]="contaDebitoTransferencia">
+                        <select class="form-control" name="contaDebitoTransferencia"
+                                [(ngModel)]="entity.transferencia.contaOrigem" #contaDebitoTransferencia="ngModel" input required>
+                          <option value=""></option>
+                          <option *ngFor="let contaCorrente of observableContas | async"
+                                  [ngValue]="contaCorrente">{{contaCorrente.descricao}}</option>
+                        </select>
+                      </form-group>
+
+                      <form-group [columnClass]="'col-sm-2'" [label]="'Tarifa Transf.'">
+                        <input class="form-control" type="text" name="tarifaTransferencia"
+                               [(ngModel)]="entity.transferencia.tarifa"
+                               currencyMask [options]="{prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left'}"
+                               input>
+                      </form-group>
+                    </div>
+
+                    <card [label]="'Favorecido'">
+                      <ng-container body>
+                        <div class="row">
+                          <form-group [columnClass]="'col-sm-6'" [label]="'Nome'" [input]="nomeFavorecido">
+                            <input class="form-control" type="text" name="nomeFavorecido"
+                                   [ngModel]="entity.transferencia?.favorecido?.nome"
+                                   (ngModelChange)="entity.transferencia.favorecido.nome=$event" #nomeFavorecido="ngModel" input required>
+                          </form-group>
+                          <form-group [columnClass]="'col-sm-6'" [label]="'CPF'" [input]="cpfFavorecido">
+                            <input class="form-control" type="text" name="cpfFavorecido" mask="000.000.000-00"
+                                   [ngModel]="entity.transferencia?.favorecido?.cpf"
+                                   (ngModelChange)="entity.transferencia.favorecido.cpf=$event"
+                                   #cpfFavorecido="ngModel" input required>
+                          </form-group>
+                        </div>
+
+                        <div class="row">
+                          <af-autocomplete [columnClass]="'col-sm-6'" [label]="'Banco *'" [fieldToDisplay]="'nome'"
+                                           [observableDataSource]="observableBancos" [displayWith]="displayAutocompleteBanco"
+                                           (onSelect)="entity.transferencia.favorecido.banco = $event">
+                          </af-autocomplete>
+
+                          <form-group [columnClass]="'col-sm-2'" [label]="'Agência'" [input]="agenciaFavorecido">
+                            <input class="form-control" type="text" name="agenciaFavorecido"
+                                   [ngModel]="entity.transferencia?.favorecido?.agencia"
+                                   (ngModelChange)="entity.transferencia.favorecido.agencia=$event"
+                                   #agenciaFavorecido="ngModel" input required>
+                          </form-group>
+                          <form-group [columnClass]="'col-sm-2'" [label]="'Conta'" [input]="contaFavorecido">
+                            <input class="form-control" type="text" name="contaFavorecido"
+                                   [ngModel]="entity.transferencia?.favorecido?.conta"
+                                   (ngModelChange)="entity.transferencia.favorecido.conta=$event"
+                                   #contaFavorecido="ngModel" input required>
+                          </form-group>
+                          <form-group [columnClass]="'col-sm-2'" [label]="'Dígito'" [input]="digitoContaFavorecido">
+                            <input class="form-control" type="text" name="digitoContaFavorecido"
+                                   [ngModel]="entity.transferencia?.favorecido?.digitoConta"
+                                   (ngModelChange)="entity.transferencia.favorecido.digitoConta=$event"
+                                   #digitoContaFavorecido="ngModel" input required>
+                          </form-group>
+                        </div>
+                      </ng-container>
+                    </card>
+                  </form>
+                </ng-container>
+              </af-dialog>
+            </ng-container>
+          </td>
+
+          <td>
+            <ng-container *ngIf="entity.temRepasseMensal">
+              <button class="btn btn-icon-toggle" type="button" [attr.data-target]="'#dialogRepasseMensal' + entity.id"
+                      data-toggle="modal" data-placement="top" title="Repasse Mensal" (click)="dialogRepasseMensal.prepareOpen()">
+                <i class="md md-event-available"></i>
+              </button>
+              <form class="form" name="formRepasseMensal" #formRepasseMensal="ngForm" accept-charset="utf-8">
+                <af-dialog [id]="'dialogRepasseMensal' + entity.id" #dialogRepasseMensal
+                           (onOpen)="openPagarRepasseMensal(entity)" (onClose)="pagarRepasseMensal($event, formRepasseMensal)"
+                           [title]="'Realizar Repasse Mensal'" [labelOperationButton]="'Pagar'" [confirmDialog]="false">
+                  <ng-container modal-body>
+                    <div class="row">
+                      <form-group [columnClass]="'col-sm-12'" [label]="'Conta de Transferência do Resgate para Inv. Sênior'" [input]="contaDebitoResgate">
+                        <select class="form-control" name="contaDebitoResgate"
+                                [(ngModel)]="contaCorrente" #contaDebitoResgate="ngModel" input required>
+                          <option value=""></option>
+                          <option *ngFor="let contaCorrente of observableContas | async"
+                                  [ngValue]="contaCorrente">{{contaCorrente.descricao}}</option>
+                        </select>
+                      </form-group>
+                    </div>
+                    <div class="row">
+                      <card [label]="'Repasses Mensais'">
+                        <div body>
+                          <af-data-table [id]="'tableRole'" [padding]="false">
+                            <thead class="style-default-dark" header>
+                            <tr>
+                              <th class="text-left">Dt. Vencimento</th>
+                              <th class="text-left">Dt. Prorrogação</th>
+                              <th class="text-left">Dt. Pagamento</th>
+                              <th class="text-left">Valor</th>
+                            </tr>
+                            </thead>
+
+                            <tbody body>
+                            <tr *ngFor="let repasse of entity.repassesMensais" (click)="repasseMensal = repasse"
+                                [class.info]="repasse === repasseMensal"
+                                [class.success]="repasse.dataDoPagamento" style="cursor:pointer">
+                              <td>{{repasse.dataDeVencimento | date: 'dd/MM/yyyy'}}</td>
+                              <td>{{repasse.dataDeProrrogacao | date: 'dd/MM/yyyy'}}</td>
+                              <td>{{repasse.dataDoPagamento | date: 'dd/MM/yyyy'}}</td>
+                              <td>{{repasse.valor | currency: 'BRL'}}</td>
+                            </tr>
+                            </tbody>
+                          </af-data-table>
+                        </div>
+                      </card>
+                    </div>
+                    <div class="row" *ngIf="entity.pagamentoSomenteJuros && repasseMensal != null">
+                      <form-group [columnClass]="'col-sm-8'" [labelColumnClass]="'col-sm-6'"
+                                  [label]="'Gerar Próximo Repasse'" [checkboxInLine]='true'>
+                        <ng-container checkbox-inline>
+                          <label class="checkbox-inline checkbox-styled">
+                            <input type="checkbox" [value]="repasseMensal.gerarProximoRepasse" name="gerarProximoRepasse"
+                                   [(ngModel)]="repasseMensal.gerarProximoRepasse"
+                                   (change)="repasseMensal.gerarProximoRepasse=$event.target.checked">
+                            <span></span>
+                          </label>
+                        </ng-container>
+                      </form-group>
+                    </div>
+                  </ng-container>
+                </af-dialog>
+              </form>
+            </ng-container>
+          </td>
+
+          <td>
+            <ng-container *ngIf="entity.dataDeAutorizacao != null && entity.dataQuitacao == null && entity.temRepasseMensal">
+              <button class="btn btn-icon-toggle" type="button" [attr.data-target]="'#dialogReceberSomenteJuros' + entity.id"
+                      data-toggle="modal" data-placement="top" title="Receber Somente Juros" (click)="dialogReceberSomenteJuros.prepareOpen()">
+                <i class="fa fa-calculator"></i>
+              </button>
+              <af-dialog [id]="'dialogReceberSomenteJuros' + entity.id" (onOpen)="openReceberSomenteJuros(entity)" #dialogReceberSomenteJuros
+                         (onClose)="receberSomenteJuros(entity, $event, formReceberSomenteJuros)" [large]="true"
+                         [title]="'Receber Somente Juros'" [confirmDialog]="false" [labelOperationButton]="'Receber'"
+                         [message]="'Selecione a conta para confirmar o recebimento do juros'">
+                <ng-container modal-body>
+                  <form class="form" name="formReceberSomenteJuros" #formReceberSomenteJuros="ngForm" accept-charset="utf-8">
+                    <div class="row">
+                      <form-group [columnClass]="'col-sm-4'" [label]="'Data Pagamento'"
+                                  [input]="dataDePagamentoSomenteJuros" [datepicker]="pickerDataDePagamentoSomenteJuros">
+                        <ng-container date>
+                          <input class="form-control" type="text" name="data" [(ngModel)]="entity.dataDePagamentoSomenteJuros"
+                                 [matDatepicker]="pickerDataDePagamentoSomenteJuros" (focus)="pickerDataDePagamentoSomenteJuros.open()"
+                                 #dataDePagamentoSomenteJuros="ngModel" required>
+                          <mat-datepicker-toggle style="display: none;" matSuffix [for]="pickerDataDePagamentoSomenteJuros"></mat-datepicker-toggle>
+                          <mat-datepicker #pickerDataDePagamentoSomenteJuros></mat-datepicker>
+                        </ng-container>
+                      </form-group>
+                      <form-group [columnClass]="'col-sm-8'" [label]="'Conta de Depósito'" [input]="contaCorrentePagamentoSomenteJuros">
+                        <select class="form-control" name="contaCorrentePagamentoSomenteJuros"
+                                [(ngModel)]="entity.contaCorrentePagamentoSomenteJuros" #contaCorrentePagamentoSomenteJuros="ngModel" input required>
+                          <option value=""></option>
+                          <option *ngFor="let contaCorrente of observableContas | async"
+                                  [ngValue]="contaCorrente">{{contaCorrente.descricao}}</option>
+                        </select>
+                      </form-group>
+                    </div>
+                    <div class="row">
+                      <form-group [columnClass]="'col-sm-4'" [label]="'Valor Pago'" [input]="valorSomenteJuros">
+                        <input class="form-control" type="text" name="valorSomenteJuros" [(ngModel)]="entity.valorSomenteJuros"
+                               [disabled]="true"
+                               currencyMask [options]="{prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left'}"
+                               #valorSomenteJuros="ngModel" input required>
+                      </form-group>
+                    </div>
+                  </form>
+                </ng-container>
+              </af-dialog>
+            </ng-container>
+          </td>
+
+          <td>
+            <ng-container *ngIf="entity.podeFinalizar">
+              <button class="btn btn-icon-toggle" type="button" [attr.data-target]="'#dialogFinalizar' + entity.id"
+                      data-toggle="modal" data-placement="top" title="Finalizar Operação">
+                <i class="fa fa-calculator"></i>
+              </button>
+              <af-dialog [id]="'dialogFinalizar' + entity.id" (onClose)="finalizar(entity)"
+                         *ngIf="!entity.pagamentoSomenteJuros"
+                         [title]="'Finalizar Operação'" [message]="'Confirma a finalização da operação?'">
+              </af-dialog>
+              <form class="form" name="formFinalizar" #formFinalizar="ngForm" accept-charset="utf-8"
+                    *ngIf="entity.pagamentoSomenteJuros">
+                <af-dialog [id]="'dialogFinalizar' + entity.id" (onClose)="finalizar(entity, $event, formFinalizar)"
+                           [title]="'Finalizar Operação'" [labelOperationButton]="'Finalizar'" [confirmDialog]="false">
+                  <ng-container modal-body>
+                    <div class="row">
+                      <form-group [columnClass]="'col-sm-10'" [label]="'Conta de Depósito do Valor Principal'"
+                                  [input]="contaCorrentePagamentoSomenteJuros">
+                        <select class="form-control" name="contaCorrentePagamentoSomenteJuros"
+                                [(ngModel)]="entity.contaCorrentePagamentoSomenteJuros"
+                                #contaCorrentePagamentoSomenteJuros="ngModel" input required>
+                          <option value=""></option>
+                          <option *ngFor="let contaCorrente of observableContas | async"
+                                  [ngValue]="contaCorrente">{{contaCorrente.descricao}}</option>
+                        </select>
+                      </form-group>
+                    </div>
+                    <div class="row" *ngIf="entity.repasse">
+                      <form-group [columnClass]="'col-sm-10'" [label]="'Conta de Transferência do Resgate para Inv. Sênior'"
+                                  [input]="contaCorrentePagamentoDoRepasseSomenteJuros">
+                        <select class="form-control" name="contaDebitoResgate"
+                                [(ngModel)]="entity.contaCorrentePagamentoDoRepasseSomenteJuros"
+                                #contaCorrentePagamentoDoRepasseSomenteJuros="ngModel" input required>
+                          <option value=""></option>
+                          <option *ngFor="let contaCorrente of observableContas | async"
+                                  [ngValue]="contaCorrente">{{contaCorrente.descricao}}</option>
+                        </select>
+                      </form-group>
+                    </div>
+                  </ng-container>
+                </af-dialog>
+              </form>
+            </ng-container>
+          </td>
+
+          <td>
+            <ng-container *ngIf="!entity.cancelada">
+              <button class="btn btn-icon-toggle" type="button" [attr.data-target]="'#dialogCancelar' + entity.id"
+                      data-toggle="modal" data-placement="top" title="Cancelar Operação">
+                <i class="md md-cancel"></i>
+              </button>
+              <af-dialog [id]="'dialogCancelar' + entity.id" (onClose)="cancelar(entity)"
+                         [title]="'Cancelamento de Operação'" [message]="'Confirma o cancelamento da operação?'">
+              </af-dialog>
+            </ng-container>
+          </td>
+        </tr>
+        </tbody>
+      </af-data-table>
+    </form>
+  </div>
+</section>
+

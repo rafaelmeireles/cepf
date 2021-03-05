@@ -1,0 +1,16 @@
+<section>
+  <div class="section-body">
+      <af-dialog [id]="'dialogCancelamento'" (onClose)="cancelar(selection)"
+                 [title]="'Cancelamento de Operação'" [message]="'Confirma o cancelamento da operação?'">
+      </af-dialog>
+
+    <form class="form" name="formulario" #form="ngForm" accept-charset="utf-8">
+      <app-operacao-list-filters [form]="form" (onFind)="onFind($event)" [insert]="false"></app-operacao-list-filters>
+      <app-operacao-list-data-table [resultList]="resultList" (onSelection)="selection = $event"
+        [dialogExtraOperation]="'dialogCancelamento'" [dialogExtraOperationTitle]="'Cancelar Operação'"
+        [dialogExtraOperationClass]="'md md-cancel'">
+      </app-operacao-list-data-table>
+    </form>
+  </div>
+</section>
+

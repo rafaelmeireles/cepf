@@ -1,0 +1,28 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import '~ngx-toastr/toastr.css';
+
+.mat-calendar-body-selected {
+  color: #ffffff;
+  background-color: #077871;
+  border-color: #077871;
+}
+
+.mat-calendar-body-today {
+  background-color: rgba(10, 168, 158, 0.1);
+  border-color: rgba(10, 168, 158, 0.1);
+  color: #0c0c0c;
+}
+
+.cdk-overlay-container {
+  z-index:9999 !important;
+}
+
+.offcanvas-pane {
+  background-color: #ffffff !important;
+}
+
+.ng-sidebar.ng-sidebar--opened.ng-sidebar--right {
+  width: 1200px;
+  background-color: #ffffff;
+}

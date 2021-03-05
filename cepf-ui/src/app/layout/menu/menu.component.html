@@ -1,0 +1,150 @@
+<!-- BEGIN MENUBAR-->
+			<div id="menubar" class="menubar-inverse ">
+				<div class="menubar-fixed-panel">
+					<div>
+						<a class="btn btn-icon-toggle btn-default menubar-toggle" data-toggle="menubar" href="javascript:void(0);">
+							<i class="fa fa-bars"></i>
+						</a>
+					</div>
+					<div class="expanded">
+						<a href="../../html/dashboards/dashboard.html">
+							<span class="text-lg text-bold text-primary ">MATERIAL&nbsp;ADMIN</span>
+						</a>
+					</div>
+				</div>
+				<div class="menubar-scroll-panel">
+
+					<!-- BEGIN MAIN MENU -->
+					<ul id="main-menu" class="gui-controls">
+
+            <li class="gui-folder">
+              <a>
+                <div class="gui-icon"><i class="md md-email"></i></div>
+                <span class="title">Investidor</span>
+              </a>
+              <!--start submenu -->
+              <ul>
+                <li routerLinkActive="active expended" *ngIf="'ADMINISTRADOR' | pipeFunction : hasRole : this">
+                  <a [routerLink]="['/investidores']" routerLinkActive="active">
+                    <span class="title">Investidor</span>
+                  </a>
+                </li>
+
+                <li routerLinkActive="active expended" *ngIf="'INVESTIDOR' | pipeFunction : hasRole : this">
+                  <a [routerLink]="['/investidores/aporte']" routerLinkActive="active">
+                    <span class="title">Aporte</span>
+                  </a>
+                </li>
+
+                <li routerLinkActive="active expended" *ngIf="'INVESTIDOR' | pipeFunction : hasRole : this">
+                  <a [routerLink]="['/investidores/resgate']" routerLinkActive="active">
+                    <span class="title">Resgate</span>
+                  </a>
+                </li>
+
+                <li routerLinkActive="active expended" *ngIf="'INVESTIDOR' | pipeFunction : hasRole : this">
+                  <a [routerLink]="['/investidores/apuracao-resultado']" routerLinkActive="active">
+                    <span class="title">Apuração de Resultado</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+						<li routerLinkActive="active expended">
+							<a [routerLink]="['/clientes']" routerLinkActive="active" *ngIf="'INVESTIDOR' | pipeFunction : hasRole : this">
+								<div class="gui-icon"><i class="md md-home"></i></div>
+								<span class="title">Cliente</span>
+							</a>
+						</li>
+
+            <li class="gui-folder">
+              <a>
+                <div class="gui-icon"><i class="md md-email"></i></div>
+                <span class="title">Empréstimo</span>
+              </a>
+              <!--start submenu -->
+              <ul>
+<!--                <li class="gui-folder">-->
+<!--                  <a href="javascript:void(0);">-->
+<!--                    <span class="title">Operação</span>-->
+<!--                  </a>-->
+<!--                  &lt;!&ndash;start submenu &ndash;&gt;-->
+<!--                  <ul>-->
+<!--                    <li routerLinkActive="active expended">-->
+<!--                      <a [routerLink]="['/operacoes']" routerLinkActive="active" *ngIf="'INVESTIDOR' | pipeFunction : hasRole : this">-->
+<!--                        <span class="title">Operação</span>-->
+<!--                      </a>-->
+<!--                    </li>-->
+<!--                    <li routerLinkActive="active expended">-->
+<!--                      <a [routerLink]="['/operacoes/autorizar']" routerLinkActive="active" *ngIf="'INVESTIDOR' | pipeFunction : hasRole : this">-->
+<!--                        <span class="title">Autorizar</span>-->
+<!--                      </a>-->
+<!--                    </li>-->
+<!--                    <li routerLinkActive="active expended">-->
+<!--                      <a [routerLink]="['/operacoes/cancelar']" routerLinkActive="active" *ngIf="'INVESTIDOR' | pipeFunction : hasRole : this">-->
+<!--                        <span class="title">Cancelar</span>-->
+<!--                      </a>-->
+<!--                    </li>-->
+<!--                  </ul>-->
+<!--                </li>-->
+                <li routerLinkActive="active expended">
+                  <a [routerLink]="['/operacoes']" routerLinkActive="active" *ngIf="'INVESTIDOR' | pipeFunction : hasRole : this">
+                    <span class="title">Operação</span>
+                  </a>
+                </li>
+                <li routerLinkActive="active expended">
+                  <a [routerLink]="['/parcelas']" routerLinkActive="active" *ngIf="'INVESTIDOR' | pipeFunction : hasRole : this">
+                    <span class="title">Parcela</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            <li class="gui-folder">
+              <a>
+                <div class="gui-icon"><i class="md md-email"></i></div>
+                <span class="title">Contábil</span>
+              </a>
+              <!--start submenu -->
+              <ul>
+                <li routerLinkActive="active expended">
+                  <a [routerLink]="['/contabil/extrato']" routerLinkActive="active" *ngIf="'INVESTIDOR' | pipeFunction : hasRole : this">
+                    <span class="title">Extrato</span>
+                  </a>
+                </li>
+                <li routerLinkActive="active expended">
+                  <a [routerLink]="['/contabil/lancamento']" routerLinkActive="active" *ngIf="'INVESTIDOR' | pipeFunction : hasRole : this">
+                    <span class="title">Lançamento</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            <li class="gui-folder">
+              <a>
+                <div class="gui-icon"><i class="md md-email"></i></div>
+                <span class="title">Segurança</span>
+              </a>
+              <!--start submenu -->
+              <ul>
+                <li routerLinkActive="active expended">
+                  <a [routerLink]="['/users/reset-password']" routerLinkActive="active">
+                    <span class="title">Alterar Senha</span>
+                  </a>
+                </li>
+                <li routerLinkActive="active expended"><a [routerLink]="['/users']" *ngIf="'ADMINISTRADOR' | pipeFunction : hasRole : this" routerLinkActive="active"><span class="title">Usuário</span></a></li>
+                <li routerLinkActive="active expended"><a [routerLink]="['/roles']" *ngIf="'ADMINISTRADOR' | pipeFunction : hasRole : this" routerLinkActive="active"><span class="title">Papel</span></a></li>
+              </ul>
+            </li>
+
+					</ul><!--end .main-menu -->
+					<!-- END MAIN MENU -->
+
+					<div class="menubar-foot-panel">
+						<small class="no-linebreak hidden-folded">
+							<span class="opacity-75">Copyright &copy; 2019 </span> <strong>CEPF</strong>
+						</small>
+					</div>
+				</div><!--end .menubar-scroll-panel-->
+			</div><!--end #menubar-->
+			<!-- END MENUBAR -->

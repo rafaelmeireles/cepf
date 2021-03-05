@@ -1,0 +1,82 @@
+<af-data-table [dataSource]="resultList">
+  <thead class="style-default-dark" header>
+    <tr>
+      <th class="text-left">Num.</th>
+      <th class="text-left">Data</th>
+      <th class="text-left">Dt. Autoriz.</th>
+      <th class="text-left">Dt. Quit.</th>
+      <th class="text-left">Dt. Fnl.</th>
+      <th class="text-left">Dt. Canc.</th>
+      <th class="text-left">Cliente</th>
+      <th class="text-left" *ngIf="'ADMINISTRADOR' | pipeFunction : hasRole : this">Investidor</th>
+      <th class="text-left">Inv. Sênior</th>
+      <th class="text-left">Valor</th>
+      <th class="text-left">Taxa</th>
+      <th class="text-left">Qtd Parc.</th>
+      <th class="text-left">Tp. Pag.</th>
+      <th class="text-left">Tp. Oper.</th>
+      <th class="text-left" style="width: 1%;"></th><!-- Visualizar -->
+      <th class="text-left" style="width: 1%;"></th><!-- Editar -->
+      <th class="text-left" style="width: 1%;"></th><!-- Histórico -->
+      <th class="text-left" style="width: 1%;"></th><!-- Extra Operation -->
+    </tr>
+  </thead>
+
+  <tbody body>
+    <tr *ngFor="let entity of resultList"
+        [class.warning]="entity.temRepasseMensal" (click)="select(entity)">
+      <td>{{entity.id}}</td>
+      <td>{{entity.data}}</td>
+      <td>{{entity.dataDeAutorizacao | date: 'dd/MM/yyyy'}}</td>
+      <td>{{entity.dataQuitacao | date: 'dd/MM/yyyy'}}</td>
+      <td>{{entity.dataFinalizacao | date: 'dd/MM/yyyy'}}</td>
+      <td>{{entity.dataDeCancelamento | date: 'dd/MM/yyyy'}}</td>
+      <td>{{entity.cliente.pessoa.nome}}</td>
+      <td *ngIf="'ADMINISTRADOR' | pipeFunction : hasRole: this">{{entity.investidor.pessoa.nome}}</td>
+      <td>{{entity.investidorSenior?.pessoa.nome}}</td>
+      <td>{{entity.valor | currency: 'BRL'}}</td>
+      <td>{{entity.taxa}}%</td>
+      <td>{{entity.quantidadeDeParcelas}}</td>
+      <td>{{entity.tipoDePagamento}}</td>
+      <td>{{entity.tipoDeOperacao}} {{entity.repasse ? ' - ' + entity.taxaDeRepasse + '%' : ''}}</td>
+      <td>
+        <button class="btn btn-icon-toggle" type="button" (click)="prepareView(entity.id)"
+                data-toggle="tooltip" data-placement="top" title="Visualizar">
+          <i class="fa fa-search"></i>
+        </button>
+      </td>
+      <td>
+        <button class="btn btn-icon-toggle" type="button" (click)="prepareUpdate(entity.id)"
+                data-toggle="tooltip" data-placement="top" title="Editar" *ngIf="entity.dataDeAutorizacao == null">
+          <i class="fa fa-edit"></i>
+        </button>
+      </td>
+      <td>
+        <button class="btn btn-icon-toggle" type="button" [attr.data-target]="'#dialogHistorico' + entity.id"
+                data-toggle="modal" data-placement="top" title="Atualizar Histórico">
+          <i class="md md-comment"></i>
+        </button>
+        <af-dialog [id]="'dialogHistorico' + entity.id" (onClose)="atualizarHistorico(entity)" [confirmDialog]="false"
+                   [title]="'Atualização de Histórico'" [labelOperationButton]="'Atualizar'">
+          <ng-container modal-body>
+            <form class="form" name="formHistorico" accept-charset="utf-8">
+              <div class="row">
+                <form-group [columnClass]="'col-sm-12'" [label]="'Histórico'">
+                    <textarea class="form-control" type="text" name="historico" rows="5"
+                              [(ngModel)]="entity.historico" input></textarea>
+                </form-group>
+              </div>
+            </form>
+          </ng-container>
+        </af-dialog>
+      </td>
+      <td>
+        <button class="btn btn-icon-toggle" type="button" [attr.data-target]="'#' + dialogExtraOperation"
+                data-toggle="modal" data-placement="top" [title]="dialogExtraOperationTitle" *ngIf="entity.showExtraOperation">
+          <i [className]="dialogExtraOperationClass"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</af-data-table>
+

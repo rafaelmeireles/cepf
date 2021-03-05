@@ -1,0 +1,68 @@
+<!-- INPUT -->
+<div class="{{columnClass}}" *ngIf="!checkbox && !checkboxInLine && !radio && !datepicker && !inputGroup">
+  <div class="form-group floating-label"
+       [ngClass]="input != null && input.invalid && (input.dirty || input.touched) ? 'has-error' : ''">
+    <ng-content select=[input]></ng-content>
+    <label>{{label}} {{input != null ? '*' : ''}}</label>
+    <!--{{input != null ? input.valid : ''}} {{input != null ? input.dirty : ''}}{{input != null ? input.touched : ''}}-->
+  </div>
+</div>
+
+<div class="{{columnClass}}" *ngIf="!checkbox && !checkboxInLine && !radio && !datepicker && inputGroup">
+  <div class="form-group floating-label"
+       [ngClass]="input != null && input.invalid && (input.dirty || input.touched) ? 'has-error' : ''">
+    <div class="input-group">
+      <span class="input-group-addon"><span class="{{inputGroupClass}}"></span></span>
+      <div class="input-group-content">
+        <ng-content select=[inputgroup]></ng-content>
+        <label>{{label}} {{input != null ? '*' : ''}}</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DATEPICKER -->
+<div class="{{columnClass}}" *ngIf="datepicker != null && !checkbox && !radio">
+  <div class="form-group floating-label control-width-normal"
+       [ngClass]="input != null && input.invalid && (input.dirty || input.touched) ? 'has-error' : ''">
+    <div class="input-group date">
+      <div class="input-group-content">
+        <ng-content select=[date]></ng-content>
+        <label>{{label}} {{input != null ? '*' : ''}}</label>
+      </div>
+      <span class="input-group-addon cal" (click)="datepicker.open()"><i class="fa fa-calendar"></i></span>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKBOX-->
+<div class="{{columnClass}}" *ngIf="checkbox && !radio">
+  <div class="form-group">
+    <div class="checkbox checkbox-styled">
+      <label>
+        <ng-content select=[checkbox]></ng-content><span>{{label}}</span>
+      </label>
+    </div>
+  </div>
+</div>
+
+<div class="{{columnClass}} form-group" *ngIf="checkboxInLine && !checkbox && !radio">
+  <label class="{{labelColumnClass}} control-label">{{label}}</label>
+  <div>
+    <ng-content select=[checkbox-inline]></ng-content>
+  </div>
+</div>
+
+<!-- DATA ANTIGO -->
+<!--<div class="{{columnClass}}" *ngIf="date && !checkbox && !radio">-->
+<!--  <div class="form-group floating-label control-width-normal" *ngIf="date && !checkbox && !radio">-->
+<!--    <div class="input-group date" data-provide="datepicker" data-date-today-highlight="true"-->
+<!--         data-date-autoclose="true" data-date-format="dd/mm/yyyy" data-date-language="pt-BR">-->
+<!--      <div class="input-group-content">-->
+<!--        <ng-content select=[date]></ng-content>-->
+<!--        <label>{{label}} {{input != null ? '*' : ''}}</label>-->
+<!--      </div>-->
+<!--      <span class="input-group-addon"><i class="fa fa-calendar"></i></span>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->

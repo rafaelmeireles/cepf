@@ -1,0 +1,16 @@
+<card [label]="title" [headerTools]="true" [baseRoute]="'/'" [component]="component">
+
+  <div body>
+    <b>Os campos com * são obrigatórios</b>
+    <ng-content select=[fields]></ng-content>
+  </div>
+
+  <div actionbar>
+    <a class="btn ink-reaction btn-raised btn-success" (click)="component.find()" accesskey="P">
+      Pesquisar
+    </a>
+    <a class="btn ink-reaction btn-raised btn-default" [routerLink]="['insert']" accesskey="N" *ngIf="insert">
+      Novo
+    </a>
+  </div>
+</card>

@@ -1,0 +1,37 @@
+<section>
+  <div class="section-body">
+    <form class="form" name="formulario" #form="ngForm" accept-charset="utf-8" (ngSubmit)="persist()">
+
+      <af-edit-fields [title]="'Apuração de Resultados'" [fullTitle]="true" [baseRoute]="'/'" [component]="this">
+        <div fields>
+          <card [label]="'Dados Gerais'">
+            <div body>
+              <div class="row">
+                <form-group [columnClass]="'col-sm-3'" [label]="'Data Inicial'" [datepicker]="pickerDataInicial" [input]="periodoInicial">
+                  <ng-container date>
+                    <input class="form-control" type="text" name="dataInicial" [(ngModel)]="instance.periodoInicial"
+                           [matDatepicker]="pickerDataInicial" (focus)="pickerDataInicial.open()"
+                           #periodoInicial="ngModel" input required>
+                    <mat-datepicker-toggle style="display: none;" matSuffix [for]="pickerDataInicial"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerDataInicial></mat-datepicker>
+                  </ng-container>
+                </form-group>
+
+                <form-group [columnClass]="'col-sm-3'" [label]="'Data Final'" [datepicker]="pickerDataFinal" [input]="periodoFinal">
+                  <ng-container date>
+                    <input class="form-control" type="text" name="dataFinal" [(ngModel)]="instance.periodoFinal"
+                           [matDatepicker]="pickerDataFinal" (focus)="pickerDataFinal.open()"
+                           #periodoFinal="ngModel" input required>
+                    <mat-datepicker-toggle style="display: none;" matSuffix [for]="pickerDataFinal"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerDataFinal></mat-datepicker>
+                  </ng-container>
+                </form-group>
+              </div>
+            </div>
+          </card>
+        </div>
+      </af-edit-fields>
+
+    </form>
+  </div>
+</section>

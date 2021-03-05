@@ -1,0 +1,80 @@
+<section>
+  <div class="section-body">
+      <form class="form" name="formAutorizar" #formAutorizar="ngForm" accept-charset="utf-8">
+        <af-dialog [id]="'dialogAutorizar'" (onClose)="autorizar(selection, $event, formAutorizar)" [confirmDialog]="false"
+                   [title]="'Autorização de Operação'" [labelOperationButton]="'Autorizar'" [large]="true">
+          <ng-container modal-body *ngIf="selection != null">
+              <div class="row">
+                <form-group [columnClass]="'col-sm-10'" [label]="'Conta de Débito'" [input]="contaDebitoTransferencia">
+                  <select class="form-control" name="contaDebitoTransferencia"
+                          [(ngModel)]="selection.transferencia.contaOrigem" #contaDebitoTransferencia="ngModel" input required>
+                    <option value=""></option>
+                    <option *ngFor="let contaCorrente of observableContas | async"
+                            [ngValue]="contaCorrente">{{contaCorrente.descricao}}</option>
+                  </select>
+                </form-group>
+
+                <form-group [columnClass]="'col-sm-2'" [label]="'Tarifa Transf.'">
+                  <input class="form-control" type="text" name="tarifaTransferencia"
+                         [(ngModel)]="selection.transferencia.tarifa"
+                         currencyMask [options]="{prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left'}"
+                         input>
+                </form-group>
+              </div>
+
+              <card [label]="'Favorecido'">
+                <ng-container body>
+                  <div class="row">
+                    <form-group [columnClass]="'col-sm-6'" [label]="'Nome'" [input]="nomeFavorecido">
+                      <input class="form-control" type="text" name="nomeFavorecido"
+                             [ngModel]="selection.transferencia?.favorecido?.nome"
+                             (ngModelChange)="selection.transferencia.favorecido.nome=$event" #nomeFavorecido="ngModel" input required>
+                    </form-group>
+                    <form-group [columnClass]="'col-sm-6'" [label]="'CPF'" [input]="cpfFavorecido">
+                      <input class="form-control" type="text" name="cpfFavorecido" mask="000.000.000-00"
+                             [ngModel]="selection.transferencia?.favorecido?.cpf"
+                             (ngModelChange)="selection.transferencia.favorecido.cpf=$event"
+                             #cpfFavorecido="ngModel" input required>
+                    </form-group>
+                  </div>
+
+                  <div class="row">
+                    <af-autocomplete [columnClass]="'col-sm-6'" [label]="'Banco *'" [fieldToDisplay]="'nome'"
+                                     [observableDataSource]="observableBancos" [displayWith]="displayAutocompleteBanco"
+                                     (onSelect)="selection.transferencia.favorecido.banco = $event">
+                    </af-autocomplete>
+
+                    <form-group [columnClass]="'col-sm-2'" [label]="'Agência'" [input]="agenciaFavorecido">
+                      <input class="form-control" type="text" name="agenciaFavorecido"
+                             [ngModel]="selection.transferencia?.favorecido?.agencia"
+                             (ngModelChange)="selection.transferencia.favorecido.agencia=$event"
+                             #agenciaFavorecido="ngModel" input required>
+                    </form-group>
+                    <form-group [columnClass]="'col-sm-2'" [label]="'Conta'" [input]="contaFavorecido">
+                      <input class="form-control" type="text" name="contaFavorecido"
+                             [ngModel]="selection.transferencia?.favorecido?.conta"
+                             (ngModelChange)="selection.transferencia.favorecido.conta=$event"
+                             #contaFavorecido="ngModel" input required>
+                    </form-group>
+                    <form-group [columnClass]="'col-sm-2'" [label]="'Dígito'" [input]="digitoContaFavorecido">
+                      <input class="form-control" type="text" name="digitoContaFavorecido"
+                             [ngModel]="selection.transferencia?.favorecido?.digitoConta"
+                             (ngModelChange)="selection.transferencia.favorecido.digitoConta=$event"
+                             #digitoContaFavorecido="ngModel" input required>
+                    </form-group>
+                  </div>
+                </ng-container>
+              </card>
+          </ng-container>
+        </af-dialog>
+      </form>
+      <form class="form" name="formulario" #form="ngForm" accept-charset="utf-8">
+        <app-operacao-list-filters [form]="form" (onFind)="onFind($event)" [insert]="false"></app-operacao-list-filters>
+        <app-operacao-list-data-table [resultList]="resultList" (onSelection)="selection = $event"
+                                      [dialogExtraOperation]="'dialogAutorizar'" [dialogExtraOperationTitle]="'Autorizar'"
+                                      [dialogExtraOperationClass]="'fa fa-money'">
+        </app-operacao-list-data-table>
+    </form>
+  </div>
+</section>
+

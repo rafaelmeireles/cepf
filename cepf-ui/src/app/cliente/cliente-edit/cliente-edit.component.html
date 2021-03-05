@@ -1,0 +1,133 @@
+<section>
+  <div class="section-body">
+    <form class="form" name="formulario" #form="ngForm" accept-charset="utf-8" (ngSubmit)="persist()">
+
+      <af-edit-fields [title]="'Cliente'" [baseRoute]="'/clientes'" [component]="this">
+        <div fields>
+
+          <card [label]="'Dados Gerais'">
+            <div body>
+              <div class="row" *ngIf="'ADMINISTRADOR' | pipeFunction: hasRole: this">
+                <form-group [columnClass]="'col-sm-12'" [label]="'Investidor'" [input]="investidor">
+                  <select class="form-control" name="investidor" [(ngModel)]="instance.investidor"
+                          #investidor="ngModel" input required [compareWith]="compareWith">
+                    <option value=""></option>
+                    <option *ngFor="let investidor of investidores | async"
+                            [ngValue]="investidor">{{investidor.pessoa.nome}}</option>
+                  </select>
+                </form-group>
+              </div>
+
+              <div class="row">
+                <form-group [columnClass]="'col-sm-4'" [label]="'CPF'">
+                  <input class="form-control" type="text" name="cpf" [(ngModel)]="instance.pessoa.cpf"
+                         mask="000.000.000-00" input (change)="onChangeCpf($event.target.value)">
+                </form-group>
+                <form-group [columnClass]="'col-sm-6'" [label]="'Nome'" [input]="nome">
+                  <input class="form-control" type="text" name="nome" [(ngModel)]="instance.pessoa.nome"
+                         #nome="ngModel" input required>
+                </form-group>
+                <form-group [columnClass]="'col-sm-2'" [label]="'Taxa(%)'">
+                  <input class="form-control" type="text" name="taxa"  [(ngModel)]="instance.taxa" input>
+                </form-group>
+              </div>
+              <div class="row">
+                <form-group [columnClass]="'col-sm-4'" [label]="'Telefone Principal'" [input]="telefonePrincipal"
+                            [inputGroup]="true" [inputGroupClass]="'fa fa-whatsapp'">
+                  <input class="form-control" type="text" name="telefonePrincipal" mask="(00) 0.0000-0000"
+                         [(ngModel)]="instance.pessoa.telefonePrincipal" #telefonePrincipal="ngModel" inputgroup required>
+                </form-group>
+                <form-group [columnClass]="'col-sm-4'" [label]="'Telefone Secundário'">
+                  <input class="form-control" type="text" name="telefoneSecundario" mask="(00) 0.0000-0000"
+                         [(ngModel)]="instance.pessoa.telefoneSecundario" input>
+                </form-group>
+                <form-group [columnClass]="'col-sm-4'" [label]="'Email'">
+                  <input class="form-control" type="email" name="email" [(ngModel)]="instance.pessoa.email" input email>
+                </form-group>
+              </div>
+            </div>
+          </card>
+
+          <card [label]="'Endereço'">
+            <div body>
+              <div class="row">
+                <form-group [columnClass]="'col-sm-3'" [label]="'Tipo Logradouro'">
+                  <select class="form-control" name="tipoLogradouro"
+                          [ngModel]="instance.pessoa.endereco?.tipoLogradouro"
+                          (ngModelChange)="instance.pessoa.endereco.tipoLogradouro=$event" input>
+                    <option value=""></option>
+                    <option *ngFor="let tipoLogradouro of enumService.tipoLogradouro"
+                            [value]="tipoLogradouro.toString()">{{tipoLogradouro}}</option>
+                  </select>
+                </form-group>
+
+                <form-group [columnClass]="'col-sm-6'" [label]="'Logradouro'">
+                  <input class="form-control" type="text" name="logradouro"
+                         [ngModel]="instance.pessoa.endereco?.logradouro"
+                         (ngModelChange)="instance.pessoa.endereco.logradouro=$event" input>
+                </form-group>
+
+                <form-group [columnClass]="'col-sm-3'" [label]="'Número'">
+                  <input class="form-control" type="text" name="numero"
+                         [ngModel]="instance.pessoa.endereco?.numero" (ngModelChange)="instance.pessoa.endereco.numero=$event" input>
+                </form-group>
+              </div>
+
+              <div class="row">
+                <form-group [columnClass]="'col-sm-6'" [label]="'Complemento'">
+                  <input class="form-control" type="text" name="complemento"
+                         [ngModel]="instance.pessoa.endereco?.complemento"
+                         (ngModelChange)="instance.pessoa.endereco.complemento=$event" input>
+                </form-group>
+                <form-group [columnClass]="'col-sm-6'" [label]="'Bairro'">
+                  <input class="form-control" type="text" name="bairro"
+                         [ngModel]="instance.pessoa.endereco?.bairro"
+                         (ngModelChange)="instance.pessoa.endereco.bairro=$event" input>
+                </form-group>
+              </div>
+
+              <div class="row">
+                <form-group [columnClass]="'col-sm-4'" [label]="'Cidade'">
+                  <input class="form-control" type="text" name="cidade"
+                         [ngModel]="instance.pessoa.endereco?.cidade" (ngModelChange)="instance.pessoa.endereco.cidade=$event"input>
+                </form-group>
+
+                <form-group [columnClass]="'col-sm-4'" [label]="'Estado'">
+                  <select class="form-control" name="uf"
+                          [ngModel]="instance.pessoa.endereco?.uf"  (ngModelChange)="instance.pessoa.endereco.uf=$event" input>
+                    <option value=""></option>
+                    <option *ngFor="let uf of enumService.uf"
+                            [value]="uf.toString()">{{uf}}</option>
+                  </select>
+                </form-group>
+
+                <form-group [columnClass]="'col-sm-4'" [label]="'CEP'">
+                  <input class="form-control" type="text" name="cep" mask="00000-000" input
+                         [ngModel]="instance.pessoa.endereco?.cep" (ngModelChange)="instance.pessoa.endereco.cep=$event">
+                </form-group>
+              </div>
+            </div>
+          </card>
+
+          <card [label]="'Referência'">
+            <div body>
+              <div class="row">
+                <form-group [columnClass]="'col-sm-8'" [label]="'Nome'">
+                  <input class="form-control" type="text" name="nomeReferencia"
+                         [ngModel]="instance.referencia?.nome"
+                         (ngModelChange)="instance.referencia.nome=$event" input>
+                </form-group>
+                <form-group [columnClass]="'col-sm-4'" [label]="'Telefone'">
+                  <input class="form-control" type="text" name="telefoneReferencia" mask="(00) 0.0000-0000"
+                         [ngModel]="instance.referencia?.telefone"
+                         (ngModelChange)="instance.referencia.telefone=$event" input>
+                </form-group>
+              </div>
+            </div>
+          </card>
+
+        </div>
+      </af-edit-fields>
+    </form>
+  </div>
+</section>

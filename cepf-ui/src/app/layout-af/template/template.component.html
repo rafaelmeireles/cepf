@@ -1,0 +1,39 @@
+<ngx-loading-bar></ngx-loading-bar>
+
+<af-header></af-header>
+
+<!-- BEGIN BASE-->
+		<div id="base">
+			<div class="offcanvas">
+			</div>
+
+      <div #contentDiv id="content">
+        <router-outlet></router-outlet>
+      </div>
+
+      <app-menu></app-menu>
+
+<!--      <app-offcanvas></app-offcanvas>-->
+<!--      <div class="offcanvas" style="height: 100%">-->
+<!--        <div class="offcanvas-pane width-12 style-default-light" style="width: 1200px" id="offcanvas-view">-->
+<!--          <div class="offcanvas-head" style="margin-bottom: 40px;">-->
+<!--            <header><span id="offcanvas-title"></span></header>-->
+<!--            <div class="offcanvas-tools">-->
+<!--              <a class="btn btn-icon-toggle btn-default pull-right hasOffcanvas" data-dismiss="offcanvas">-->
+<!--                <i class="md md-close"></i>-->
+<!--              </a>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div id="content-view" class="offcanvas-body">-->
+<!--&lt;!&ndash;            Body&ndash;&gt;-->
+<!--&lt;!&ndash;            <a [routerLink]="['/cepf/operacoes', { outlets: { routerOutletView: ['operacoesinsert'] } }]" >teste</a><br/>&ndash;&gt;-->
+<!--&lt;!&ndash;            <a href="operacoes/insert">Open off-canvas</a><br/>&ndash;&gt;-->
+<!--&lt;!&ndash;            <a [routerLink]="['./operacoes/insert']">Contact Types</a>&ndash;&gt;-->
+<!--&lt;!&ndash;            <router-outlet name="routerOutletView"></router-outlet>&ndash;&gt;-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+
+    </div>
+
+    <af-footer></af-footer>

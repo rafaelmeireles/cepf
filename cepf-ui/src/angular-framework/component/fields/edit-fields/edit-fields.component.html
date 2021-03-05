@@ -1,0 +1,23 @@
+<card [label]="title" [headerTools]="true" [baseRoute]="baseRoute" [component]="component">
+
+  <div body>
+    <b>Os campos com * são obrigatórios</b>
+    <ng-content select=[fields]></ng-content>
+  </div>
+
+  <div actionbar>
+    <button type="submit" *ngIf="component.instance.id == undefined"
+            class="btn ink-reaction btn-raised btn-success" accesskey="C">
+      Salvar
+    </button>
+
+    <button *ngIf="component.instance.id != undefined" type="button" (click)="component.update()"
+            class="btn ink-reaction btn-raised btn-success" accesskey="A">
+      Salvar
+    </button>
+
+    <a class="btn ink-reaction btn-flat btn-default" accesskey="V" [routerLink]="baseRoute">
+      Cancelar
+    </a>
+  </div>
+</card>

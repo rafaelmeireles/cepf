@@ -1,0 +1,29 @@
+<div class="{{columnClass}}">
+  <div class="form-group floating-label">
+    <input [id]="id" class="form-control" type="text" [readonly]="readonly"
+           matInput [formControl]="control" [matAutocomplete]="autocomplete" (blur)="verifyNull($event.target.value)">
+    <mat-autocomplete #autocomplete="matAutocomplete" [displayWith]="displayWith"
+                      (optionSelected)="select($event.option.value)">
+      <mat-option *ngFor="let entity of filteredDataSource | async" [value]="entity">
+        <ng-container *ngIf="fieldToDisplay.split('.').length == 1">
+          {{entity.id}} - {{entity[fieldToDisplay]}}
+        </ng-container>
+        <ng-container *ngIf="fieldToDisplay.split('.').length > 1">
+          {{entity.id}} - {{(entity[fieldToDisplay.split('.')[0]])[fieldToDisplay.split('.')[1]]}}
+        </ng-container>
+      </mat-option>
+    </mat-autocomplete>
+    <label>{{label}}</label>
+  </div>
+</div>
+
+<!--            <mat-form-field class="col-sm-6 form-group">-->
+<!--              <input class="form-control" type="text" placeholder="Contas"-->
+<!--                     matInput [formControl]="controlContas" [matAutocomplete]="auto">-->
+<!--              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWith"-->
+<!--                                (optionSelected)="instance.conta=$event.option.value">-->
+<!--                <mat-option *ngFor="let conta of contasFiltradas | async" [value]="conta" >-->
+<!--                  {{conta.id}} - {{conta.nome}}-->
+<!--                </mat-option>-->
+<!--              </mat-autocomplete>-->
+<!--            </mat-form-field>-->
